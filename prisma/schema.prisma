@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String    @db.VarChar(45)
+  products Product[]
+}
+
+model Product {
+  id         Int      @id @default(autoincrement())
+  ean        String   @db.VarChar(13)
+  name       String   @db.VarChar(60)
+  idCategory Int
+  insDate    DateTime
+  updDate    DateTime @updatedAt
+  insUser    Int
+  updUser    Int
+  category   Category @relation(fields: [idCategory], references: [id])
+}
+
+model AppUser {
+  id                 Int      @id @default(autoincrement())
+  username           String   @db.VarChar(50)
+  email              String   @unique @db.VarChar(100)
+  password           String   @db.VarChar(100)
+  lastPasswordChange DateTime
+  insDate            DateTime
+  updDate            DateTime @updatedAt
+  insUser            Int
+  updUser            Int
+  type               Int
+  passwordValidity   Int
+  passwordExpires    Boolean
+  isActive           Boolean
+}
